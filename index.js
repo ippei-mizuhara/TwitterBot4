@@ -59,9 +59,14 @@ app.get("/tweet", (req, res) => {
         ]
         var random = emojis[Math.floor(Math.random()* emojis.length)];
         console.log(random)
+        var count = Math.floor(Math.random() * 10) + 1;
+        var randomEmojiText = "";
+        for(var i = 0; i < count; i++){
+            randomEmojiText += random;
+        }
         var hashTag = "\n#TikTokLite #ポイ活";
         var link = "\n" + process.env.HATENA_URL;
-        var tweet = text + random + hashTag + link;
+        var tweet = text + randomEmojiText + hashTag + link;
         console.log(tweet)
         client.v2.tweet(tweet); 
     } catch (err) {
