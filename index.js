@@ -25,7 +25,6 @@ const app = express();
 app.get("/tweet", (req, res) => {
     try {
         var text = "【期間限定】今なら誰でも" + process.env.TIKTOK_AMOUNT + "円ゲットできるよ\n招待URL: " + process.env.TIKTOK_URL + "\nルールを守らないとお金がもらえないので必ず↓を見て登録してね"
-        var random = Math.floor(Math.random() * (30));
         const emojis = [
             "😀",
             "😆",
