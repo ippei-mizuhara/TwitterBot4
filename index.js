@@ -22,7 +22,7 @@ client.readWrite;
 
 const app = express();
 
-app.get("/tweet", (req, res) => {
+app.get("/tiktok", (req, res) => {
     try {
         var text = "【期間限定】今なら誰でも" + process.env.TIKTOK_AMOUNT + "円ゲットできるよ\n招待URL: " + process.env.TIKTOK_URL + "\nルールを守らないとお金がもらえないので必ず↓を見て登録してね"
         const emojis = [
@@ -94,6 +94,48 @@ app.get("/tweet", (req, res) => {
         var tweet = text + randomEmojiText + hashTag + link;
         console.log(tweet)
         client.v2.tweet(tweet); 
+    } catch (err) {
+        console.log(err);
+    }
+    res.send('get');
+});
+
+const greet = async () => {
+
+    https.get(process.env.AMAZON_API_URL, (resp) =>{
+        let data = ''; 
+        // A chunk of data has been received. 
+        resp.on('data', (chunk) => { 
+            data += chunk; 
+        }); 
+    
+        // The whole response has been received. Print out the result. 
+        resp.on('end', () => {
+            var body = JSON.parse(data)
+            console.log(body); 
+            console.log(body.length);
+            if(body.length == 0){
+                greet();
+            }
+            var random = Math.floor(Math.random() * (body.length));
+            console.log(random);
+            var text = "【" + body[random].percentage +"%オフ" + "】"
+            var url = body[random].url;
+            var title = body[random].title.substring(0,88);
+            client.v2.tweet(text + " " + url + " " +title + " #セール #Amazon" );
+            return true;
+        }); 
+    
+    }).on("error", (err) => { 
+        console.log("Error: " + err.message); 
+        return false;
+    })
+
+};
+
+app.get("/tweet", (req, res) => {
+    try {
+        greet();
     } catch (err) {
         console.log(err);
     }
